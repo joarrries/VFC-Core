@@ -3306,7 +3306,9 @@ int main(int argc , char *argv[])
             setMasterNode();
             loadmem();
 
-            const uint np = atoi(argv[2]);
+            uint np = atoi(argv[2]);
+            if(np > MAX_RALLOW)
+                np = MAX_RALLOW;
             resyncBlocks(np);
             
             __off_t ls = 0;
