@@ -3538,6 +3538,8 @@ int main(int argc , char *argv[])
                     //base58 priv key
                     char* bpriv = strtok(l, " ");
 
+                    printf("A: %sf\n", bpriv);
+
                     //priv as bytes
                     struct addr subg_priv;
                     size_t len = ECC_CURVE+1;
@@ -3550,7 +3552,7 @@ int main(int argc , char *argv[])
                     //Get balance of pub key
                     const double bal = toDB(getBalanceLocal(&subg_pub));
 
-                    printf("B: %.3f\n", bal);
+                    printf("C: %.3f\n", bal);
 
                     //Print private key & balance 
                     if(bal > 0)
