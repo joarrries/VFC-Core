@@ -3266,7 +3266,7 @@ int main(int argc , char *argv[])
                     //Get balance of pub key
                     const double bal = toDB(getBalanceLocal(&subg_pub));
 
-                    printf(".");
+                    printf("\b.");
                     fflush(stdout);
 
                     if(bal > 0)
@@ -3292,6 +3292,7 @@ int main(int argc , char *argv[])
                 }
                 fclose(f);
             }
+            printf("\n");
             exit(0);
         }
 
@@ -3640,6 +3641,7 @@ int main(int argc , char *argv[])
                 }
                 fclose(f);
             }
+            printf("\n");
             exit(0);
         }
 
@@ -3704,6 +3706,7 @@ int main(int argc , char *argv[])
                 }
                 fclose(f);
             }
+            printf("\n");
             exit(0);
         }
 
