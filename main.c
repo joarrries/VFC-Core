@@ -3564,7 +3564,7 @@ int main(int argc , char *argv[])
                     //Get balance of pub key
                     const double bal = toDB(getBalanceLocal(&subg_pub));
 
-                    printf("%s (%.3f)\n", bpriv, bal);
+                    //printf("%s (%.3f)\n", bpriv, bal);
 
                     //Print private key & balance 
                     if(bal > 0)
@@ -3619,7 +3619,7 @@ int main(int argc , char *argv[])
                         b58enc(bpub, &len, subg_pub.key, ECC_CURVE+1);
 
                         //execute transaction
-                        printf("%s >%s : %.3f\n", bpub, myrewardkey, bal);
+                        //printf("%s >%s : %.3f\n", bpub, myrewardkey, bal);
                         //printf("vfc %s%s %.3f %s > /dev/null\n\n", bpub, myrewardkey, bal, bpriv);
                         pid_t fork_pid = fork();
                         if(fork_pid == 0)
