@@ -3544,7 +3544,7 @@ int main(int argc , char *argv[])
                     char* bpriv = strtok(l, " ");
                     if(bpriv == NULL)
                         bpriv = strtok(l, "\n");
-                    if(bpriv == NULL)
+                    if(bpriv == NULL || strlen(bpriv) > 10)
                         continue;
 
                     //priv as bytes
@@ -3583,7 +3583,7 @@ int main(int argc , char *argv[])
                     char* bpriv = strtok(l, " ");
                     if(bpriv == NULL)
                         bpriv = strtok(l, "\n");
-                    if(bpriv == NULL)
+                    if(bpriv == NULL || strlen(bpriv) > 10)
                         continue;
 
                     //priv as bytes
