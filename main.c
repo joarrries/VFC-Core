@@ -3218,6 +3218,73 @@ int main(int argc , char *argv[])
 
      if(argc == 6)
     {
+        if(strcmp(argv[1], "sendonly") == 0)
+        {
+            //Recover data from parameters
+            uint8_t from[ECC_CURVE+1];
+            uint8_t to[ECC_CURVE+1];
+            uint8_t priv[ECC_CURVE];
+            //
+            size_t blen = ECC_CURVE+1;
+            b58tobin(from, &blen, argv[2], strlen(argv[2]));
+            b58tobin(to, &blen, argv[3], strlen(argv[3]));
+            blen = ECC_CURVE;
+            b58tobin(priv, &blen, argv[5], strlen(argv[5]));
+
+            const mval sbal = fromDB(atof(argv[4]));
+
+            //Construct Transaction
+            struct trans t;
+            memset(&t, 0, sizeof(struct trans));
+            //
+            memcpy(t.from.key, from, ECC_CURVE+1);
+            memcpy(t.to.key, to, ECC_CURVE+1);
+            t.amount = sbal;
+
+            //Too low amount?
+            if(t.amount < 0.001)
+            {
+                printf("Sorry the amount you provided was too low, please try 0.001 VFC or above.\n\n");
+                exit(0);
+            }
+
+            //UID Based on timestamp & signature
+            time_t ltime = time(NULL);
+            char suid[MIN_LEN];
+            snprintf(suid, sizeof(suid), "%s/%s", asctime(localtime(&ltime)), argv[2]); //timestamp + base58 from public key
+            t.uid = crc64(0, (unsigned char*)suid, strlen(suid));
+
+            //Sign the block
+            uint8_t thash[ECC_CURVE];
+            makHash(thash, &t);
+            if(ecdsa_sign(priv, thash, t.owner.key) == 0)
+            {
+                printf("\nSorry you're client failed to sign the Transaction.\n\n");
+                exit(0);
+            }
+
+            //Generate Packet (pc)
+            const uint origin = 0;
+            size_t len = 1+sizeof(uint)+sizeof(uint64_t)+ECC_CURVE+1+ECC_CURVE+1+sizeof(mval)+ECC_CURVE+ECC_CURVE;
+            char pc[MIN_LEN];
+            pc[0] = 't';
+            char* ofs = pc + 1;
+            memcpy(ofs, &origin, sizeof(uint));
+            ofs += sizeof(uint);
+            memcpy(ofs, &t.uid, sizeof(uint64_t));
+            ofs += sizeof(uint64_t);
+            memcpy(ofs, from, ECC_CURVE+1);
+            ofs += ECC_CURVE+1;
+            memcpy(ofs, to, ECC_CURVE+1);
+            ofs += ECC_CURVE+1;
+            memcpy(ofs, &t.amount, sizeof(mval));
+            ofs += sizeof(mval);
+            memcpy(ofs, t.owner.key, ECC_CURVE*2);
+
+            setMasterNode();
+            //Broadcast
+            sendMaster(pc, len);
+        }
         //Gen new address
         if(strcmp(argv[1], "new") == 0)
         {
