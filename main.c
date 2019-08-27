@@ -4179,6 +4179,8 @@ int main(int argc , char *argv[])
                 printf("\nFailed to verify the Transaction.\n\n");
                 exit(0);
             }
+
+            memcpy(t.owner.key, owner, ECC_CURVE*2);
             //Generate Packet (pc)
             const uint origin = 0;
             size_t len = 1+sizeof(uint)+sizeof(uint64_t)+ECC_CURVE+1+ECC_CURVE+1+sizeof(mval)+ECC_CURVE+ECC_CURVE;
